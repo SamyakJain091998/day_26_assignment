@@ -1,6 +1,7 @@
 package com.payrollService.assignment;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -105,19 +106,21 @@ public class EmployeePayrollDBService {
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) throws Exception {
 		// TODO Auto-generated method stub
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		EmployeePayrollData empPayrollData = null;
 		try {
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
 				String name = resultSet.getString("name");
 				double salary = resultSet.getDouble("salary");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
+				empPayrollData = new EmployeePayrollData(id, name, salary, startDate);
+				employeePayrollList.add(empPayrollData);
 			}
+			return employeePayrollList;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			throw new EmployeePayrollException("Oops there's an exception!");
 		}
-		return employeePayrollList;
 	}
 
 	private void prepareStatementForEmployeeDate() throws Exception {
@@ -128,6 +131,41 @@ public class EmployeePayrollDBService {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			throw new EmployeePayrollException("Oops there's an exception!");
+		}
+	}
+
+	public List<EmployeePayrollData> getEmployeePayrollDataBasisDate(LocalDate date1, LocalDate date2)
+			throws EmployeePayrollException, Exception {
+		// TODO Auto-generated method stub
+		List<EmployeePayrollData> employeePayrollList = null;
+		if (this.employeePayrollDataStatement == null)
+			try {
+				this.prepareStatementForEmployeeRetrievalBasisDate(date1, date2);
+				employeePayrollDataStatement.setDate(1, Date.valueOf(date1));
+				employeePayrollDataStatement.setDate(2, Date.valueOf(date2));
+				
+				ResultSet resultSet = employeePayrollDataStatement.executeQuery();
+				employeePayrollList = this.getEmployeePayrollData(resultSet);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new EmployeePayrollException("Oops there's an exception!");
+			}
+		return employeePayrollList;
+	}
+
+	private void prepareStatementForEmployeeRetrievalBasisDate(LocalDate dateFirst, LocalDate dateSecond)
+			throws Exception {
+		Connection connection = this.getConnection();
+//		String sql = "SELECT * FROM employee_payroll WHERE name = ?";
+
+		String sql = "SELECT * FROM employee_payroll WHERE start BETWEEN CAST(? as date) and CAST(? as date)";
+
+		try {
+			employeePayrollDataStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception here!");
 		}
 	}
 

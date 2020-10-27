@@ -1,6 +1,8 @@
 package com.payrollService.assignment;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeePayrollService {
@@ -63,6 +65,21 @@ public class EmployeePayrollService {
 		}
 		// TODO Auto-generated method stub
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
+	}
+
+	public List<String> getEmployeeNameListSyncWithDB(LocalDate date1, LocalDate date2) throws Exception {
+		List<EmployeePayrollData> employeePayrollDataList;
+		try {
+			employeePayrollDataList = employeePayrollDBService.getEmployeePayrollDataBasisDate(date1, date2);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
+		List<String> employeeNameList = new ArrayList<>();
+		for (int i = 0; i < employeePayrollDataList.size(); i++) {
+			employeeNameList.add(employeePayrollDataList.get(i).getName());
+		}
+		return employeeNameList;
 	}
 
 }

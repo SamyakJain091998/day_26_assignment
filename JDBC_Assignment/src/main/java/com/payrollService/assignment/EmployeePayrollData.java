@@ -5,10 +5,10 @@ import java.util.Date;
 
 public class EmployeePayrollData {
 
-	private static int id;
-	private static String name;
-	private static double salary;
-	private static LocalDate startDate;
+	private int id;
+	private String name;
+	private double salary;
+	private LocalDate startDate;
 
 	public EmployeePayrollData() {
 
@@ -22,43 +22,42 @@ public class EmployeePayrollData {
 		this.startDate = startDate;
 	}
 
-	public static int getId() {
+	public int getId() {
 		return id;
 	}
 
-	public static void setId(int id) {
-		EmployeePayrollData.id = id;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public static String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public static void setName(String name) {
-		EmployeePayrollData.name = name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public static double getSalary() {
+	public double getSalary() {
 		return salary;
 	}
 
-	public static void setSalary(double salary) {
-		EmployeePayrollData.salary = salary;
+	public void setSalary(double salary) {
+		this.salary = salary;
 	}
 
-	public static LocalDate getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public static void setStartDate(LocalDate startDate) {
-		EmployeePayrollData.startDate = startDate;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
-	
-	
 	@Override
 	public String toString() {
-		return "EmployeePayrollData [ id -> " + id + " name -> " + name + " salary -> " + salary + " startDate -> " + startDate + " ]";
+		return "EmployeePayrollData [ id -> " + getId() + " name -> " + getName() + " salary -> " + getSalary()
+				+ " startDate -> " + getStartDate() + " ]";
 	}
 
 	@Override
