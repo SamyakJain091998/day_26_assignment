@@ -41,28 +41,35 @@ public class EmployeePayrollDBService {
 		return connection;
 	}
 
-	public List<EmployeePayrollData> readData() throws SQLException {
+	public List<EmployeePayrollData> readData() throws Exception {
 		String sql = "SELECT * from employee_payroll";
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		Connection connection = this.getConnection();
 		System.out.println("Creating statement..");
-		Statement statement = connection.createStatement();
-		System.out.println("Statement created successfully..");
-		ResultSet resultSet = statement.executeQuery(sql);
-		employeePayrollList = this.getEmployeePayrollData(resultSet);
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			System.out.println("Statement created successfully..");
+			ResultSet resultSet = statement.executeQuery(sql);
+			employeePayrollList = this.getEmployeePayrollData(resultSet);
 
-//		resultSet.close();
-//		statement.close();
-		connection.close();
+//			resultSet.close();
+//			statement.close();
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
 		return employeePayrollList;
 	}
 
-	public int updateEmployeeData(String name, double salary) {
+	public int updateEmployeeData(String name, double salary) throws EmployeePayrollException, Exception {
 		// TODO Auto-generated method stub
 		return this.updateEmployeeDataUsingStatement(name, salary);
 	}
 
-	private int updateEmployeeDataUsingStatement(String name, double salary) {
+	private int updateEmployeeDataUsingStatement(String name, double salary)
+			throws EmployeePayrollException, Exception {
 		// TODO Auto-generated method stub
 		String sql = String.format("update employee_payroll set salary = %.2f where name = '%s';", salary, name);
 		try (Connection connection = this.getConnection();) {
@@ -70,9 +77,8 @@ public class EmployeePayrollDBService {
 			return statement.executeUpdate(sql);
 		} catch (SQLException e) {
 			// TODO: handle exception
-			e.printStackTrace();
+			throw new EmployeePayrollException("Oops there's an exception!");
 		}
-		return 0;
 	}
 
 	private int updateEmployeeDataUsingPreparedStatement(String name, double salary) {
@@ -80,35 +86,49 @@ public class EmployeePayrollDBService {
 		return 0;
 	}
 
-	public List<EmployeePayrollData> getEmployeePayrollData(String name) throws SQLException {
+	public List<EmployeePayrollData> getEmployeePayrollData(String name) throws Exception {
 		// TODO Auto-generated method stub
 		List<EmployeePayrollData> employeePayrollList = null;
 		if (this.employeePayrollDataStatement == null)
-			this.prepareStatementForEmployeeDate();
-		employeePayrollDataStatement.setString(1, name);
-		ResultSet resultSet = employeePayrollDataStatement.executeQuery();
-		employeePayrollList = this.getEmployeePayrollData(resultSet);
-
+			try {
+				this.prepareStatementForEmployeeDate();
+				employeePayrollDataStatement.setString(1, name);
+				ResultSet resultSet = employeePayrollDataStatement.executeQuery();
+				employeePayrollList = this.getEmployeePayrollData(resultSet);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				throw new EmployeePayrollException("Oops there's an exception!");
+			}
 		return employeePayrollList;
 	}
 
-	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) throws SQLException {
+	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) throws Exception {
 		// TODO Auto-generated method stub
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
-		while (resultSet.next()) {
-			int id = resultSet.getInt("id");
-			String name = resultSet.getString("name");
-			double salary = resultSet.getDouble("salary");
-			LocalDate startDate = resultSet.getDate("start").toLocalDate();
-			employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
+		try {
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				double salary = resultSet.getDouble("salary");
+				LocalDate startDate = resultSet.getDate("start").toLocalDate();
+				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
 		}
 		return employeePayrollList;
 	}
 
-	private void prepareStatementForEmployeeDate() throws SQLException {
+	private void prepareStatementForEmployeeDate() throws Exception {
 		Connection connection = this.getConnection();
 		String sql = "SELECT * FROM employee_payroll WHERE name = ?";
-		employeePayrollDataStatement = connection.prepareStatement(sql);
+		try {
+			employeePayrollDataStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
 	}
 
 }

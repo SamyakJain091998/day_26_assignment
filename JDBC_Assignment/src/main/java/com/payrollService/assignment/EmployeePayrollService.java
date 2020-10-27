@@ -18,7 +18,7 @@ public class EmployeePayrollService {
 		this.employeePayrollList = employeePayrollList;
 	}
 
-	public List<EmployeePayrollData> readEmployeePayrollData() throws SQLException {
+	public List<EmployeePayrollData> readEmployeePayrollData() throws Exception {
 		// TODO Auto-generated method stub
 		this.employeePayrollList = employeePayrollDBService.readData();
 
@@ -27,12 +27,21 @@ public class EmployeePayrollService {
 
 	public void updateEmployeeSalary(String name, double salary) {
 		// TODO Auto-generated method stub
-		int result = employeePayrollDBService.updateEmployeeData(name, salary);
-		if (result == 0)
-			return;
-		EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
-		if (employeePayrollData != null)
-			employeePayrollData.setSalary(salary);
+		int result;
+		try {
+			result = employeePayrollDBService.updateEmployeeData(name, salary);
+			if (result == 0)
+				return;
+			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+			if (employeePayrollData != null)
+				employeePayrollData.setSalary(salary);
+		} catch (EmployeePayrollException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private EmployeePayrollData getEmployeePayrollData(String name) {
@@ -44,8 +53,14 @@ public class EmployeePayrollService {
 		return employeePayrollData;
 	}
 
-	public boolean checkEmployeePayrollInSyncWithDB(String name) throws SQLException {
-		List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+	public boolean checkEmployeePayrollInSyncWithDB(String name) throws Exception {
+		List<EmployeePayrollData> employeePayrollDataList;
+		try {
+			employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
 		// TODO Auto-generated method stub
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
