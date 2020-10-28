@@ -94,7 +94,7 @@ public class EmployeePayrollDBService {
 		List<EmployeePayrollData> employeePayrollList = null;
 		if (this.employeePayrollDataStatement == null)
 			try {
-				String sql = "SELECT * FROM employee_payroll WHERE name = ?";
+				String sql = "SELECT * FROM employee_payroll WHERE name = ? AND is_Active = 1";
 				this.prepareStatementForEmployeeData(sql);
 				employeePayrollDataStatement.setString(1, name);
 				ResultSet resultSet = employeePayrollDataStatement.executeQuery();
@@ -104,6 +104,24 @@ public class EmployeePayrollDBService {
 				throw new EmployeePayrollException("Oops there's an exception!");
 			}
 		return employeePayrollList;
+	}
+
+	public int setActiveStatusFalseInDB(String name) throws Exception {
+		// TODO Auto-generated method stub
+		List<EmployeePayrollData> employeePayrollList = null;
+		int result = 0;
+		if (this.employeePayrollDataStatement == null)
+			try {
+				String sql = "UPDATE employee_payroll SET is_Active = 0 WHERE name = ?";
+				this.prepareStatementForEmployeeData(sql);
+				employeePayrollDataStatement.setString(1, name);
+				result = employeePayrollDataStatement.executeUpdate();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new EmployeePayrollException("Oops there's an exception!");
+			}
+		return result;
 	}
 
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) throws Exception {

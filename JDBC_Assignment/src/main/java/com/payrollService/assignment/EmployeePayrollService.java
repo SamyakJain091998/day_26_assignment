@@ -68,6 +68,21 @@ public class EmployeePayrollService {
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
+	public boolean checkEmployeePayrollInSyncWithDB_WithActiveStatusOption(String name) throws Exception {
+		List<EmployeePayrollData> employeePayrollDataList;
+		try {
+			employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
+		// TODO Auto-generated method stub
+		if (employeePayrollDataList == null) {
+			return false;
+		}
+		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
+	}
+
 	public List<String> getEmployeeNameListSyncWithDB(LocalDate date1, LocalDate date2) throws Exception {
 		List<EmployeePayrollData> employeePayrollDataList;
 		try {
@@ -105,6 +120,14 @@ public class EmployeePayrollService {
 		// TODO Auto-generated method stub
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollErDiagramModel(name, salary, startDate,
 				gender, companyId, departmentId));
+	}
+
+	public void setActiveStatusFalseERDiagramModel(String name) throws Exception {
+		// TODO Auto-generated method stub
+		int result = employeePayrollDBService.setActiveStatusFalseInDB(name);
+		if (result == 0) {
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
 	}
 
 }

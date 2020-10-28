@@ -34,7 +34,7 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		try {
 			List<EmployeePayrollData> EmployeePayrollData = employeePayrollService.readEmployeePayrollData();
-			employeePayrollService.updateEmployeeSalary("Terisa", 300000.0);
+			employeePayrollService.updateEmployeeSalary("Terisa", 900000.0);
 			boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
 			Assert.assertTrue(result);
 		} catch (SQLException e) {
@@ -98,6 +98,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertTrue(result);
 	}
 
+	@Ignore
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB_ERDiagramModel() throws Exception {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
@@ -107,4 +108,13 @@ public class EmployeePayrollServiceTest {
 		Assert.assertTrue(result);
 	}
 
+	@Test
+	public void givenEmployeePayrollDate_WhenGivenEmployeeName_ShouldSetTheActiveStatusFalse_ERDiagramModel()
+			throws Exception {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData();
+		employeePayrollService.setActiveStatusFalseERDiagramModel("Hailey");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB_WithActiveStatusOption("Hailey");
+		Assert.assertEquals(true, result);
+	}
 }
