@@ -261,4 +261,89 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollData;
 	}
+
+	public EmployeePayrollData addEmployeeToPayrollErDiagramModel(String name, double salary, LocalDate startDate,
+			String gender, int companyId, int departmentId) throws EmployeePayrollException, Exception {
+		int employeeId = -1;
+		Connection connection = null;
+		EmployeePayrollData employeePayrollData = null;
+		if (!(companyId == 1 || companyId == 2) || !(departmentId == 1 || departmentId == 2)) {
+			System.out.println("here,...");
+			System.out.println("Oops! Check for the companyId or the departmentId you entered...");
+			return null;
+		}
+		try {
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new EmployeePayrollException("Oops there's an exception here!");
+
+		}
+		try (Statement statement = connection.createStatement();) {
+			String sql = String.format(
+					"INSERT INTO employee_payroll (company_id, name, gender, salary, start) "
+							+ "VALUES ('%s', '%s', '%s', '%s', '%s')",
+					companyId, name, gender, salary, Date.valueOf(startDate));
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if (rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					employeeId = resultSet.getInt(1);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			connection.rollback();
+			return employeePayrollData;
+		}
+
+		try (Statement statement = connection.createStatement();) {
+			double deductions = salary * 0.2;
+			double taxable_pay = salary - deductions;
+			double tax = taxable_pay * 0.1;
+			double net_pay = salary - tax;
+			String sql = String.format("INSERT INTO payroll_details "
+					+ "(employee_id, basic_pay, deductions, taxable_pay, tax, net_pay) VALUES "
+					+ "( %s, %s, %s, %s, %s, %s )", employeeId, salary, deductions, taxable_pay, tax, net_pay);
+			int rowAffected = statement.executeUpdate(sql);
+			if (rowAffected == 1) {
+				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, startDate);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			connection.rollback();
+			e.printStackTrace();
+			throw new EmployeePayrollException("Oops there's an exception here!");
+		}
+		/////////////
+
+		try (Statement statement = connection.createStatement();) {
+
+			String sql = String.format(
+					"INSERT INTO employee_department " + "(employee_id, department_id) VALUES " + "( %s, %s )",
+					employeeId, departmentId);
+			int rowAffected = statement.executeUpdate(sql);
+			if (rowAffected == 1) {
+				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, startDate, companyId);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			connection.rollback();
+			e.printStackTrace();
+			throw new EmployeePayrollException("Oops there's an exception here!");
+		}
+
+		/////////////
+		try {
+			connection.commit();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new EmployeePayrollException("Oops there's an exception here!");
+		} finally {
+			if (connection != null)
+				connection.close();
+		}
+		return employeePayrollData;
+	}
 }

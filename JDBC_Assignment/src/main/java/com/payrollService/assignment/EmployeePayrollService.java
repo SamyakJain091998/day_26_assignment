@@ -100,4 +100,11 @@ public class EmployeePayrollService {
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC8(name, salary, startDate, gender));
 	}
 
+	public void addEmployeeToPayrollERDiagramModel(String name, double salary, LocalDate startDate, String gender,
+			int companyId, int departmentId) throws EmployeePayrollException, Exception {
+		// TODO Auto-generated method stub
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollErDiagramModel(name, salary, startDate,
+				gender, companyId, departmentId));
+	}
+
 }

@@ -88,6 +88,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertTrue(result);
 	}
 
+	@Ignore
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB_UC8() throws Exception {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
@@ -96,5 +97,14 @@ public class EmployeePayrollServiceTest {
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
 	}
-	
+
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB_ERDiagramModel() throws Exception {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData();
+		employeePayrollService.addEmployeeToPayrollERDiagramModel("Hailey", 1000000.00, LocalDate.now(), "F", 1, 2);
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Dest");
+		Assert.assertTrue(result);
+	}
+
 }
