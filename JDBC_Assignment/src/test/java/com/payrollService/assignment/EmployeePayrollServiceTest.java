@@ -60,6 +60,7 @@ public class EmployeePayrollServiceTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void givenEmployeePayrollDate_WhenAverageSalaryRetrievedByGender_ShouldReturnAppropriateValues()
 			throws Exception {
@@ -75,5 +76,14 @@ public class EmployeePayrollServiceTest {
 			// TODO Auto-generated catch block
 			throw new EmployeePayrollException("Oops there's an exception!");
 		}
+	}
+
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws Exception {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData();
+		employeePayrollService.addEmployeeToPayroll("Mark", 5000000.00, LocalDate.now(), "M");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+		Assert.assertTrue(result);
 	}
 }
