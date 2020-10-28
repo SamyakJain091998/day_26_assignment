@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -42,6 +43,7 @@ public class EmployeePayrollServiceTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void givenEmployeePayrollInDB_WhenRetrievedBasedOnJoiningDate_ShouldSyncWithDB() throws Exception {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
@@ -58,4 +60,20 @@ public class EmployeePayrollServiceTest {
 		}
 	}
 
+	@Test
+	public void givenEmployeePayrollDate_WhenAverageSalaryRetrievedByGender_ShouldReturnAppropriateValues()
+			throws Exception {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		try {
+			List<EmployeePayrollData> EmployeePayrollData = employeePayrollService.readEmployeePayrollData();
+			Map<String, Double> averageSalaryBasisGender = employeePayrollService.readAverageSalaryByGender();
+			System.out.println("Map is : " + averageSalaryBasisGender);
+			Assert.assertTrue(averageSalaryBasisGender.get("M").equals(200000.0)
+					&& averageSalaryBasisGender.get("F").equals(300000.0));
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception!");
+		}
+	}
 }

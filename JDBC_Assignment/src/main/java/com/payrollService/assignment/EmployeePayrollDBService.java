@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollDBService {
 	private PreparedStatement employeePayrollDataStatement;
@@ -153,5 +155,25 @@ public class EmployeePayrollDBService {
 				throw new EmployeePayrollException("Oops there's an exception!");
 			}
 		return employeePayrollList;
+	}
+
+	public Map<String, Double> getAverageSalaryByGender() throws Exception {
+		// TODO Auto-generated method stub
+		String sql = "SELECT gender, AVG(salary) as averageSalary from employee_payroll GROUP BY gender";
+		Map<String, Double> genderAverageSalaryMap = new HashMap<>();
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				String gender = resultSet.getString("gender");
+				double salary = resultSet.getDouble("averageSalary");
+				genderAverageSalaryMap.put(gender, salary);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeePayrollException("Oops there's an exception here!");
+		}
+
+		return genderAverageSalaryMap;
 	}
 }
