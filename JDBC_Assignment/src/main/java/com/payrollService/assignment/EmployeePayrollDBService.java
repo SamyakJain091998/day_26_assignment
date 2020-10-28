@@ -92,7 +92,8 @@ public class EmployeePayrollDBService {
 		List<EmployeePayrollData> employeePayrollList = null;
 		if (this.employeePayrollDataStatement == null)
 			try {
-				this.prepareStatementForEmployeeDate();
+				String sql = "SELECT * FROM employee_payroll WHERE name = ?";
+				this.prepareStatementForEmployeeData(sql);
 				employeePayrollDataStatement.setString(1, name);
 				ResultSet resultSet = employeePayrollDataStatement.executeQuery();
 				employeePayrollList = this.getEmployeePayrollData(resultSet);
@@ -123,9 +124,8 @@ public class EmployeePayrollDBService {
 		}
 	}
 
-	private void prepareStatementForEmployeeDate() throws Exception {
+	private void prepareStatementForEmployeeData(String sql) throws Exception {
 		Connection connection = this.getConnection();
-		String sql = "SELECT * FROM employee_payroll WHERE name = ?";
 		try {
 			employeePayrollDataStatement = connection.prepareStatement(sql);
 		} catch (SQLException e) {
@@ -140,10 +140,11 @@ public class EmployeePayrollDBService {
 		List<EmployeePayrollData> employeePayrollList = null;
 		if (this.employeePayrollDataStatement == null)
 			try {
-				this.prepareStatementForEmployeeRetrievalBasisDate(date1, date2);
+				String sql = "SELECT * FROM employee_payroll WHERE start BETWEEN CAST(? as date) and CAST(? as date)";
+				this.prepareStatementForEmployeeData(sql);
 				employeePayrollDataStatement.setDate(1, Date.valueOf(date1));
 				employeePayrollDataStatement.setDate(2, Date.valueOf(date2));
-				
+
 				ResultSet resultSet = employeePayrollDataStatement.executeQuery();
 				employeePayrollList = this.getEmployeePayrollData(resultSet);
 			} catch (Exception e) {
@@ -153,20 +154,4 @@ public class EmployeePayrollDBService {
 			}
 		return employeePayrollList;
 	}
-
-	private void prepareStatementForEmployeeRetrievalBasisDate(LocalDate dateFirst, LocalDate dateSecond)
-			throws Exception {
-		Connection connection = this.getConnection();
-//		String sql = "SELECT * FROM employee_payroll WHERE name = ?";
-
-		String sql = "SELECT * FROM employee_payroll WHERE start BETWEEN CAST(? as date) and CAST(? as date)";
-
-		try {
-			employeePayrollDataStatement = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			throw new EmployeePayrollException("Oops there's an exception here!");
-		}
-	}
-
 }
