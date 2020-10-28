@@ -78,12 +78,23 @@ public class EmployeePayrollServiceTest {
 		}
 	}
 
+	@Ignore
 	@Test
-	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws Exception {
+	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB_UC7() throws Exception {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData();
-		employeePayrollService.addEmployeeToPayroll("Mark", 5000000.00, LocalDate.now(), "M");
+		employeePayrollService.addEmployeeToPayrollUC7("Mark", 5000000.00, LocalDate.now(), "M");
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
 	}
+
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB_UC8() throws Exception {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData();
+		employeePayrollService.addEmployeeToPayrollUC8("Mark", 5000000.00, LocalDate.now(), "M");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+		Assert.assertTrue(result);
+	}
+	
 }

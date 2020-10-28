@@ -177,7 +177,7 @@ public class EmployeePayrollDBService {
 		return genderAverageSalaryMap;
 	}
 
-	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate startDate, String gender)
+	public EmployeePayrollData addEmployeeToPayrollUC7(String name, double salary, LocalDate startDate, String gender)
 			throws EmployeePayrollException, Exception {
 		// TODO Auto-generated method stub
 		int employeeId = -1;
@@ -198,6 +198,66 @@ public class EmployeePayrollDBService {
 			// TODO: handle exception
 			throw new EmployeePayrollException("Oops there's an exception here!");
 
+		}
+		return employeePayrollData;
+	}
+
+	public EmployeePayrollData addEmployeeToPayrollUC8(String name, double salary, LocalDate startDate, String gender)
+			throws EmployeePayrollException, Exception {
+		int employeeId = -1;
+		Connection connection = null;
+		EmployeePayrollData employeePayrollData = null;
+		try {
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new EmployeePayrollException("Oops there's an exception here!");
+
+		}
+		try (Statement statement = connection.createStatement();) {
+			String sql = String.format(
+					"INSERT INTO employee_payroll (name, gender, salary, start) " + "VALUES ('%s', '%s', '%s', '%s')",
+					name, gender, salary, Date.valueOf(startDate));
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if (rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					employeeId = resultSet.getInt(1);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			connection.rollback();
+			return employeePayrollData;
+		}
+
+		try (Statement statement = connection.createStatement();) {
+			double deductions = salary * 0.2;
+			double taxable_pay = salary - deductions;
+			double tax = taxable_pay * 0.1;
+			double net_pay = salary - tax;
+			String sql = String.format("INSERT INTO payroll_details "
+					+ "(employee_id, basic_pay, deductions, taxable_pay, tax, net_pay) VALUES "
+					+ "( %s, %s, %s, %s, %s, %s )", employeeId, salary, deductions, taxable_pay, tax, net_pay);
+			int rowAffected = statement.executeUpdate(sql);
+			if (rowAffected == 1) {
+				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, startDate);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			connection.rollback();
+			e.printStackTrace();
+			throw new EmployeePayrollException("Oops there's an exception here!");
+		}
+		try {
+			connection.commit();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new EmployeePayrollException("Oops there's an exception here!");
+		} finally {
+			if (connection != null)
+				connection.close();
 		}
 		return employeePayrollData;
 	}

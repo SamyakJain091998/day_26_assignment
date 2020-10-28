@@ -88,9 +88,16 @@ public class EmployeePayrollService {
 		return employeePayrollDBService.getAverageSalaryByGender();
 	}
 
-	public void addEmployeeToPayroll(String name, double salary, LocalDate startDate, String gender)
+	public void addEmployeeToPayrollUC7(String name, double salary, LocalDate startDate, String gender)
 			throws EmployeePayrollException, Exception {
 		// TODO Auto-generated method stub
-		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, startDate, gender));
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC7(name, salary, startDate, gender));
 	}
+
+	public void addEmployeeToPayrollUC8(String name, double salary, LocalDate startDate, String gender)
+			throws EmployeePayrollException, Exception {
+		// TODO Auto-generated method stub
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC8(name, salary, startDate, gender));
+	}
+
 }
