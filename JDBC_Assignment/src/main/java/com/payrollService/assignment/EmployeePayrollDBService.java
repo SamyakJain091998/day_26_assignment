@@ -29,7 +29,7 @@ public class EmployeePayrollDBService {
 		return employeePayrollDBService;
 	}
 
-	private Connection getConnection() {
+	private synchronized Connection getConnection() {
 		connectionCounter++;
 		Connection connection = null;
 		final String DB_URL = "jdbc:mysql://localhost:3307/payroll_service_assignment";
@@ -148,7 +148,7 @@ public class EmployeePayrollDBService {
 		}
 	}
 
-	private void prepareStatementForEmployeeData(String sql) throws Exception {
+	private synchronized void prepareStatementForEmployeeData(String sql) throws Exception {
 		Connection connection = this.getConnection();
 		try {
 			employeePayrollDataStatement = connection.prepareStatement(sql);

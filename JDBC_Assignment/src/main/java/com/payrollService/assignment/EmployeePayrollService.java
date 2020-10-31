@@ -115,7 +115,7 @@ public class EmployeePayrollService {
 		employeePayrollDataList.forEach(employeePayrollData -> {
 			try {
 				System.out.println("Employee being added : " + employeePayrollData.getName());
-				this.addEmployeeToPayrollUC7(employeePayrollData.getName(), employeePayrollData.getSalary(),
+				this.addEmployeeToPayrollUC8(employeePayrollData.getName(), employeePayrollData.getSalary(),
 						employeePayrollData.getStartDate(), employeePayrollData.getGender());
 				System.out.println("Employee added : " + employeePayrollData.getName());
 			} catch (Exception e) {
@@ -135,7 +135,7 @@ public class EmployeePayrollService {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				try {
 					System.out.println("Employee being added : " + Thread.currentThread().getName());
-					this.addEmployeeToPayrollUC7(employeePayrollData.getName(), employeePayrollData.getSalary(),
+					this.addEmployeeToPayrollUC8(employeePayrollData.getName(), employeePayrollData.getSalary(),
 							employeePayrollData.getStartDate(), employeePayrollData.getGender());
 					employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
 					System.out.println("Employee added : " + Thread.currentThread().getName());
