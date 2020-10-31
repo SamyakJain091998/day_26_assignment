@@ -141,8 +141,13 @@ public class EmployeePayrollServiceTest {
 		employeePayrollService.addEmployeesToPayroll(Arrays.asList(arrayOfEmployees));
 		Instant end = Instant.now();
 		System.out.println("Duration without thread : " + Duration.between(start, end));
-		List<EmployeePayrollData> EmployeePayrollData = employeePayrollService.readEmployeePayrollData();
 
-		Assert.assertEquals(7, EmployeePayrollData.size());
+		Instant threadStart = Instant.now();
+		employeePayrollService.addEmployeesToPayrollWithThread(Arrays.asList(arrayOfEmployees));
+		Instant threadEnd = Instant.now();
+		System.out.println("Duration without thread : " + Duration.between(threadStart, threadEnd));
+		List<EmployeePayrollData> EmployeePayrollData = employeePayrollService.readEmployeePayrollData();
+		System.out.println(EmployeePayrollData);
+		Assert.assertEquals(13, EmployeePayrollData.size());
 	}
 }

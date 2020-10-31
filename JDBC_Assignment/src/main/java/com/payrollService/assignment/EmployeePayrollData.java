@@ -2,6 +2,7 @@ package com.payrollService.assignment;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 public class EmployeePayrollData {
 
@@ -85,6 +86,11 @@ public class EmployeePayrollData {
 
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.name, this.gender, this.salary, this.startDate);
 	}
 
 	@Override
