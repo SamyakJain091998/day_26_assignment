@@ -30,9 +30,9 @@ public class EmployeePayrollDBService {
 
 	private Connection getConnection() {
 		Connection connection = null;
-		final String DB_URL = "jdbc:mysql://localhost/payroll_service_assignment";
+		final String DB_URL = "jdbc:mysql://localhost:3307/payroll_service_assignment";
 		final String USER = "root";
-		final String PASS = "admin@123";
+		final String PASS = "Admin@123";
 		try {
 			System.out.println("Connecting to database: " + DB_URL);
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -214,6 +214,8 @@ public class EmployeePayrollDBService {
 			employeePayrollData = new EmployeePayrollData(employeeId, name, salary, startDate);
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println("jere");
+			e.printStackTrace();
 			throw new EmployeePayrollException("Oops there's an exception here!");
 
 		}

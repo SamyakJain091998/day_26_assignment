@@ -10,6 +10,7 @@ public class EmployeePayrollData {
 	private double salary;
 	private LocalDate startDate;
 	private int companyId;
+	public String gender;
 
 	public EmployeePayrollData() {
 
@@ -32,12 +33,26 @@ public class EmployeePayrollData {
 		this.companyId = companyId;
 	}
 
+	public EmployeePayrollData(int id, String name, String gender, double salary, LocalDate startDate) {
+		// TODO Auto-generated constructor stub
+		this(id, name, salary, startDate);
+		this.gender = gender;
+	}
+
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public int getCompanyId() {

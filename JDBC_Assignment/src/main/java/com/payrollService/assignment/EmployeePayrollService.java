@@ -109,6 +109,22 @@ public class EmployeePayrollService {
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC7(name, salary, startDate, gender));
 	}
 
+	public void addEmployeesToPayroll(List<EmployeePayrollData> employeePayrollDataList) {
+		// TODO Auto-generated method stub
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			try {
+				System.out.println("Employee being added : " + employeePayrollData.getName());
+				this.addEmployeeToPayrollUC8(employeePayrollData.getName(), employeePayrollData.getSalary(),
+						employeePayrollData.getStartDate(), employeePayrollData.getGender());
+				System.out.println("Employee added : " + employeePayrollData.getName());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		System.out.println(this.employeePayrollList);
+	}
+
 	public void addEmployeeToPayrollUC8(String name, double salary, LocalDate startDate, String gender)
 			throws EmployeePayrollException, Exception {
 		// TODO Auto-generated method stub
