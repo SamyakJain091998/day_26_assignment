@@ -135,9 +135,12 @@ public class EmployeePayrollService {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				try {
 					System.out.println("Employee being added : " + Thread.currentThread().getName());
+
 					this.addEmployeeToPayrollUC8(employeePayrollData.getName(), employeePayrollData.getSalary(),
 							employeePayrollData.getStartDate(), employeePayrollData.getGender());
+
 					employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
+
 					System.out.println("Employee added : " + Thread.currentThread().getName());
 				} catch (EmployeePayrollException e) {
 					// TODO Auto-generated catch block

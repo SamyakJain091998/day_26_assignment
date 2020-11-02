@@ -18,12 +18,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 import java.time.Duration;
 
+import org.hamcrest.Matchers;
+import org.hamcrest.*;
+
 public class EmployeePayrollServiceTest {
 
 	@Ignore
 	@Test
 	public void test() {
-		Assert.assertTrue(true);
+//		Assert.assertTrue(true);
+//		Assert.assertThat(Long.valueOf(1), CoreMatchers.instanceOf(Long.class));
+		List<Integer> list = Arrays.asList(1, 2, 3);
+		MatcherAssert.assertThat(list, Matchers.hasSize(3));
+		MatcherAssert.assertThat(list, Matchers.contains(1, 2, 3));
+		MatcherAssert.assertThat(list, Matchers.everyItem(Matchers.greaterThan(0)));
+
 	}
 
 	@Ignore
@@ -126,6 +135,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(true, result);
 	}
 
+	@Ignore
 	@Test
 	public void given6Employees_WhenAdded_ShouldMatchTheNumberOfEmployeeEntries() throws Exception {
 		EmployeePayrollData[] arrayOfEmployees = { new EmployeePayrollData(0, "Jeff", "M", 100000.0, LocalDate.now()),
