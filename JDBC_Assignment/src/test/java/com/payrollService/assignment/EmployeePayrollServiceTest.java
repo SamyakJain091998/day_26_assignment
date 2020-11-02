@@ -202,6 +202,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(2, entries);
 	}
 
+	@Ignore
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldMatchTheCount() {
 
@@ -221,5 +222,31 @@ public class EmployeePayrollServiceTest {
 		long entries = employeePayrollService.countEntries();
 		System.out.println("----Number of entries : " + entries);
 		Assert.assertEquals(2, entries);
+	}
+
+	@Test
+	public void givenMultipleEmployees_WhenAdded_ShouldMatchTheCount() {
+
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		EmployeePayrollData[] arrayOfNewEmployees = {
+				new EmployeePayrollData(0, "Anil Ambani", "M", 500000.0, LocalDate.now()),
+				new EmployeePayrollData(0, "Mukesh Ambani", "M", 3000000.0, LocalDate.now()),
+				new EmployeePayrollData(0, "Warren Buffet", "M", 4000000.0, LocalDate.now()) };
+
+		for (EmployeePayrollData employeePayrollData : arrayOfNewEmployees) {
+			Response response = addEmployeeToJsonServer(employeePayrollData);
+			int statusCode = response.getStatusCode();
+			System.out.println("----Status codeis : " + statusCode);
+			Assert.assertEquals(201, statusCode);
+			employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+			employeePayrollService.addEmployeesToPayroll(employeePayrollData);
+		}
+
+		long entries = employeePayrollService.countEntries();
+		System.out.println("----Number of entries : " + entries);
+		Assert.assertEquals(6, entries);
 	}
 }
