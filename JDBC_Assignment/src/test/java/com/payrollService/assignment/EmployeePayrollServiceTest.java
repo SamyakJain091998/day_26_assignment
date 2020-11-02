@@ -11,11 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.geometry.euclidean.oned.Interval;
 import org.joda.time.DateTime;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.google.gson.Gson;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+
 import java.time.Duration;
 
 import org.hamcrest.Matchers;
@@ -160,4 +166,29 @@ public class EmployeePayrollServiceTest {
 		System.out.println(EmployeePayrollData);
 		Assert.assertEquals(13, EmployeePayrollData.size());
 	}
+
+	@Before
+	public void setup() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+
+	public EmployeePayrollData[] getEmployeeList() {
+		// TODO Auto-generated method stub
+		Response response = RestAssured.get("/employee_payroll");
+		System.out.println("Employee payroll entries in json server -> " + response.asString());
+		EmployeePayrollData[] arrayOfEmps = new Gson().fromJson(response.asString(), EmployeePayrollData[].class);
+		return arrayOfEmps;
+	}
+
+	@Test
+	public void givenEmployeeDataInJsonServer_WhenRetrieved_ShouldMatchTheCount() {
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		long entries = employeePayrollService.countEntries();
+		System.out.println("----Number of entries : " + entries);
+		Assert.assertEquals(2, entries);
+	}
+
 }

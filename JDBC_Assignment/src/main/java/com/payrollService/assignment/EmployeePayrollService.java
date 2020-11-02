@@ -19,7 +19,11 @@ public class EmployeePayrollService {
 
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
 		this();
-		this.employeePayrollList = employeePayrollList;
+		this.employeePayrollList = new ArrayList<>(employeePayrollList);
+	}
+
+	public long countEntries() {
+		return employeePayrollList.size();
 	}
 
 	public List<EmployeePayrollData> readEmployeePayrollData() throws Exception {
