@@ -224,6 +224,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(2, entries);
 	}
 
+	@Ignore
 	@Test
 	public void givenMultipleEmployees_WhenAdded_ShouldMatchTheCount() {
 
@@ -244,6 +245,29 @@ public class EmployeePayrollServiceTest {
 			employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
 			employeePayrollService.addEmployeesToPayroll(employeePayrollData);
 		}
+
+		long entries = employeePayrollService.countEntries();
+		System.out.println("----Number of entries : " + entries);
+		Assert.assertEquals(6, entries);
+	}
+
+	@Test
+	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200response() throws EmployeePayrollException {
+
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		employeePayrollService.updateEmployeeSalaryOnJsonServer("Anil Ambani", 6000000.0);
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Anil Ambani");
+
+		String empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(empJson);
+		Response response = request.put("/employee_payroll/" + employeePayrollData.getId());
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
 
 		long entries = employeePayrollService.countEntries();
 		System.out.println("----Number of entries : " + entries);

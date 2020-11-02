@@ -52,7 +52,19 @@ public class EmployeePayrollService {
 		}
 	}
 
-	private EmployeePayrollData getEmployeePayrollData(String name) {
+	public void updateEmployeeSalaryOnJsonServer(String name, double salary) throws EmployeePayrollException {
+		// TODO Auto-generated method stub
+		try {
+			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+			if (employeePayrollData != null)
+				employeePayrollData.setSalary(salary);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public EmployeePayrollData getEmployeePayrollData(String name) {
 		// TODO Auto-generated method stub
 		EmployeePayrollData employeePayrollData;
 		employeePayrollData = this.employeePayrollList.stream()
