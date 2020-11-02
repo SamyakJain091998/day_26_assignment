@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 import java.time.Duration;
 
@@ -181,6 +182,16 @@ public class EmployeePayrollServiceTest {
 		return arrayOfEmps;
 	}
 
+	public Response addEmployeeToJsonServer(EmployeePayrollData employeePayrollData) {
+		// TODO Auto-generated method stub
+		String empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(empJson);
+		return request.post("/employee_payroll");
+	}
+
+	@Ignore
 	@Test
 	public void givenEmployeeDataInJsonServer_WhenRetrieved_ShouldMatchTheCount() {
 		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
@@ -191,4 +202,24 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(2, entries);
 	}
 
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldMatchTheCount() {
+
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		EmployeePayrollData employeePayrollData = new EmployeePayrollData(0, "Mark zuckerberg", "M", 300000.0,
+				LocalDate.now());
+		Response response = addEmployeeToJsonServer(employeePayrollData);
+		int statusCode = response.getStatusCode();
+		System.out.println("----Status codeis : " + statusCode);
+		Assert.assertEquals(201, statusCode);
+
+		employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+		employeePayrollService.addEmployeesToPayroll(employeePayrollData);
+		long entries = employeePayrollService.countEntries();
+		System.out.println("----Number of entries : " + entries);
+		Assert.assertEquals(2, entries);
+	}
 }

@@ -130,6 +130,10 @@ public class EmployeePayrollService {
 		System.out.println(this.employeePayrollList);
 	}
 
+	public void addEmployeesToPayroll(EmployeePayrollData employeePayrollData) {
+		employeePayrollList.add(employeePayrollData);
+	}
+
 	public void addEmployeesToPayrollWithThread(List<EmployeePayrollData> employeePayrollDataList)
 			throws EmployeePayrollException, Exception {
 		// TODO Auto-generated method stub
