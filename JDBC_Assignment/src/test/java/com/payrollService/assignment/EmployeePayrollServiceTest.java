@@ -251,6 +251,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(6, entries);
 	}
 
+	@Ignore
 	@Test
 	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200response() throws EmployeePayrollException {
 
@@ -272,5 +273,27 @@ public class EmployeePayrollServiceTest {
 		long entries = employeePayrollService.countEntries();
 		System.out.println("----Number of entries : " + entries);
 		Assert.assertEquals(6, entries);
+	}
+
+	@Test
+	public void givenEmployeeToDelete_WhenDeleted_ShouldMatch200response() throws EmployeePayrollException {
+
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Anil Ambani");
+
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/employee_payroll/" + employeePayrollData.getId());
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+
+		employeePayrollService.deleteEmployeePayroll(employeePayrollData.getName());
+
+		long entries = employeePayrollService.countEntries();
+		System.out.println("----Number of entries : " + entries);
+		Assert.assertEquals(5, entries);
 	}
 }

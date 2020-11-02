@@ -64,6 +64,12 @@ public class EmployeePayrollService {
 		}
 	}
 
+	public void deleteEmployeePayroll(String name) {
+		// TODO Auto-generated method stub
+		EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+		employeePayrollList.remove(employeePayrollData);
+	}
+
 	public EmployeePayrollData getEmployeePayrollData(String name) {
 		// TODO Auto-generated method stub
 		EmployeePayrollData employeePayrollData;
